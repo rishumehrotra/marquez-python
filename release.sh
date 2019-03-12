@@ -10,6 +10,8 @@ get_current_package_version()
 }
 
 set_next_package_version() {
+  # The {new_version} is not a bash variable - it's a bumpversion notation for the new version.
+  # Please see bumpversion --help for more information.
   bumpversion --current-version $1 --commit --tag --tag-name {new_version} $2 ./setup.py
 }
 
