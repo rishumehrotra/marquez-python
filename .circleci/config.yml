@@ -31,7 +31,7 @@ jobs:
       - run: ./docker/release_check.sh
       - run: pip install --user twine
       - run: python setup.py sdist
-      - run: echo "re-enable this command\: python -m twine upload --verbose dist/*"
+      - run: echo "re-enable this command - python -m twine upload --verbose dist/*"
 
 workflows:
   version: 2
