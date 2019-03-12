@@ -9,12 +9,9 @@ does_package_version_match()
   echo "expected_version is ${expected_version}"
 
   if [[ "${current_version}" != "${expected_version}" ]]; then
-
-    echo "no match"
+    echo "Packaging code ${current_version} does not equal to tagged version, ${expected_version}"
     return 1
   else
-
-    echo "match"
     return 0
   fi
 }
