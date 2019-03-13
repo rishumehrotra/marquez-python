@@ -43,9 +43,7 @@ update_package_version()
   version=$(get_current_package_version)
   echo "Upgrading version from the current version of ${version}"
   set_next_package_version ${version} ${type}
-  git push origin master
-  tag=$(git describe --tag)
-  git push origin tag
+  git push --tags origin master
 }
 
 update_package_version $1
