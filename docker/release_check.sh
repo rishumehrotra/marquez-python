@@ -15,7 +15,6 @@
 # limitations under the License.
 set -e -x -u
 
-
 does_package_version_match()
 {
   expected_version=$CIRCLE_TAG

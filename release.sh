@@ -13,7 +13,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-set -e -x -u
+set -e -x
 
 # Usage: $ ./prepare_for_release.py <type>
 # type - [major | minor | patch]. Default is patch.
@@ -31,7 +31,7 @@ set_next_package_version() {
 
 update_package_version()
 {
-  type=${2}
+  type=${1}
   if [ -z "${type}" ]
   then
       echo "defaulting to 'patch'"
