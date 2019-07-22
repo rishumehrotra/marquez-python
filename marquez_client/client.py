@@ -23,6 +23,10 @@ from marquez_client.constants import (
 from marquez_client.version import VERSION
 from six.moves.urllib.parse import quote
 
+from marquez_client.models import (
+    Namespace, Job, JobRun, Datasource, Dataset
+)
+
 _API_PATH = 'api/v1'
 
 _USER_AGENT = f'marquez-python/{VERSION}'
@@ -59,25 +63,34 @@ class MarquezClient(object):
         if description:
             payload['description'] = description
 
-        return self._put(
+        response = self._put(
             self._url('/namespaces/{0}', namespace_name),
             payload=payload
         )
+
+        return Namespace(response['name'], response['createdAt'],
+                         response['owner'], response['description'])
 
     def get_namespace(self, namespace_name):
         if not namespace_name:
             raise ValueError('namespace_name must not be None')
 
-        return self._get(self._url('/namespaces/{0}', namespace_name))
+        response = self._get(self._url('/namespaces/{0}', namespace_name))
+
+        return Namespace(response['name'], response['createdAt'],
+                         response['owner'], response['description'])
 
     def list_namespaces(self, limit=None, offset=None):
-        return self._get(
+        responses = self._get(
             self._url('/namespaces'),
             params={
                 'limit': limit,
                 'offset': offset
             }
         )
+
+        return [Namespace(response['name'], response['createdAt'],
+                          response['owner'], response['description']) for response in responses['namespaces']]
 
     def create_job(self, job_name, location, input_dataset_urns=None,
                    output_dataset_urns=None, description=None,
@@ -99,10 +112,13 @@ class MarquezClient(object):
         if description:
             payload['description'] = description
 
-        return self._put(
+        response = self._put(
             self._url('/namespaces/{0}/jobs/{1}', namespace_name, job_name),
             payload=payload
         )
+
+        return Job(response['name'], response['createdAt'], response['updatedAt'], response['inputDatasetUrns'],
+                   response['outputDatasetUrns'], response['location'], response['description'])
 
     def get_job(self, job_name, namespace_name=None):
         if not job_name:
@@ -111,9 +127,12 @@ class MarquezClient(object):
         if not namespace_name:
             namespace_name = self._namespace_name
 
-        return self._get(
+        response = self._get(
             self._url('/namespaces/{0}/jobs/{1}', namespace_name, job_name)
         )
+
+        return Job(response['name'], response['createdAt'], response['updatedAt'], response['inputDatasetUrns'],
+                   response['outputDatasetUrns'], response['location'], response['description'])
 
     def list_jobs(self, limit=None, offset=None, namespace_name=None):
         if not namespace_name:
@@ -126,6 +145,9 @@ class MarquezClient(object):
                 'offset': offset
             }
         )
+
+        return [Job(response['name'], response['createdAt'], response['updatedAt'], response['inputDatasetUrns'],
+                    response['outputDatasetUrns'], response['location'], response['description']) for response in responses]
 
     def create_job_run(self, job_name, nominal_start_time=None,
                        nominal_end_time=None, run_args=None,
@@ -156,31 +178,33 @@ class MarquezClient(object):
             run_id = response['runId']
             response = self.mark_job_run_as_running(run_id)
 
-        return response
+        return JobRun(response["runId"], response["nominalStartTime"], response["nominalEndTime"], response["runArgs"], response["runState"])
 
     def get_job_run(self, run_id):
         if not run_id:
             raise ValueError('run_id must not be None')
 
-        return self._get(self._url('/jobs/runs/{0}', run_id))
+        response = self._get(self._url('/jobs/runs/{0}', run_id))
+
+        return JobRun(response["runId"], response["nominalStartTime"], response["nominalEndTime"], response["runArgs"], response["runState"])
 
     def mark_job_run_as_running(self, run_id):
-        return self._mark_job_run_as(run_id, 'run')
+        self._mark_job_run_as(run_id, 'run')
 
     def mark_job_run_as_completed(self, run_id):
-        return self._mark_job_run_as(run_id, 'complete')
+        self._mark_job_run_as(run_id, 'complete')
 
     def mark_job_run_as_failed(self, run_id):
-        return self._mark_job_run_as(run_id, 'fail')
+        self._mark_job_run_as(run_id, 'fail')
 
     def mark_job_run_as_aborted(self, run_id):
-        return self._mark_job_run_as(run_id, 'abort')
+        self._mark_job_run_as(run_id, 'abort')
 
     def _mark_job_run_as(self, run_id, action):
         if not run_id:
             raise ValueError('run_id must not be None')
 
-        return self._put(
+        self._put(
             self._url('/jobs/runs/{0}/{1}', run_id, action), as_json=False
         )
 
@@ -190,7 +214,7 @@ class MarquezClient(object):
         if not connection_url:
             raise ValueError('connection_url must not be None')
 
-        return self._post(
+        response = self._post(
             self._url('/datasources'),
             payload={
                 'name': datasource_name,
@@ -198,20 +222,28 @@ class MarquezClient(object):
             }
         )
 
+        return Datasource(response["name"], response["createdAt"], response["datasourceUrn"], response["description"])
+
     def get_datasource(self, datasource_urn):
         if not datasource_urn:
             raise ValueError('datasource_urn must not be None')
 
-        return self._get(self._url('/datasources/{0}', datasource_urn))
+        response = self._get(self._url('/datasources/{0}', datasource_urn))
+
+        return Datasource(response["name"], response["createdAt"], response["datasourceUrn"], response["description"])
+
 
     def list_datasources(self, limit=None, offset=None):
-        return self._get(
+        responses = self._get(
             self._url('/datasources'),
             params={
                 'limit': limit,
                 'offset': offset
             }
         )
+
+        return [Datasource(response["name"], response["createdAt"], response["datasourceUrn"], response["description"]) for response in responses]
+
 
     def create_dataset(self, dataset_name, datasource_urn,
                        description=None, namespace_name=None):
@@ -231,10 +263,12 @@ class MarquezClient(object):
         if description:
             payload['description'] = description
 
-        return self._post(
+        response = self._post(
             self._url('/namespaces/{0}/datasets', namespace_name),
             payload=payload
         )
+
+        return Dataset(response["name"], response["createdAt"], response["urn"], response["datasourceUrn"], response["description"])
 
     def get_dataset(self, dataset_urn, namespace_name=None):
         if not dataset_urn:
@@ -243,22 +277,28 @@ class MarquezClient(object):
         if not namespace_name:
             namespace_name = self._namespace_name
 
-        return self._get(
+        response = self._get(
             self._url('/namespaces/{0}/datasets/{1}',
                       namespace_name, dataset_urn)
         )
+
+        return Dataset(response["name"], response["createdAt"], response["urn"], response["datasourceUrn"], response["description"])
+
 
     def list_datasets(self, namespace_name=None, limit=None, offset=None):
         if not namespace_name:
             namespace_name = self._namespace_name
 
-        return self._get(
+        responses = self._get(
             self._url('/namespaces/{0}/datasets', namespace_name),
             params={
                 'limit': limit,
                 'offset': offset
             }
         )
+
+        return [Dataset(response["name"], response["createdAt"], response["urn"], response["datasourceUrn"], response["description"]) for response in responses]
+
 
     def _url(self, path, *args):
         encoded_args = [quote(arg.encode('utf-8'), safe='') for arg in args]
