@@ -21,7 +21,7 @@ class RunState(Enum):
     ABORTED = 'ABORTED'
 
 
-class Namespace:
+class Namespace(object):
     def __init__(self, name, created_at, owner_name, description):
         self._name = name
         self._created_at = created_at
@@ -44,8 +44,13 @@ class Namespace:
     def description(self):
         return self._description
 
+    @staticmethod
+    def from_response(response):
+        return Namespace(response['name'], response['createdAt'],
+                         response['owner'], response['description'])
 
-class Job:
+
+class Job(object):
     def __init__(self, name, created_at, updated_at, input_dataset_urns,
                  output_dataset_urns, location, description):
         self._name = name
@@ -84,8 +89,13 @@ class Job:
     def description(self):
         return self._description
 
+    @staticmethod
+    def from_response(response):
+        return Job(response['name'], response['createdAt'], response['updatedAt'], response['inputDatasetUrns'],
+                   response['outputDatasetUrns'], response['location'], response['description'])
 
-class JobRun:
+
+class JobRun(object):
     def __init__(self, run_id, nominal_start_time,
                  nominal_end_time, run_args, run_state):
         self._run_id = run_id
@@ -114,8 +124,13 @@ class JobRun:
     def run_state(self):
         return self._run_state
 
+    @staticmethod
+    def from_response(response):
+        return JobRun(response["runId"], response["nominalStartTime"],
+                      response["nominalEndTime"], response["runArgs"], response["runState"])
 
-class Datasource:
+
+class Datasource(object):
     def __init__(self, name, created_at, urn, connection_url):
         self._name = name
         self._created_at = created_at
@@ -138,8 +153,13 @@ class Datasource:
     def connection_url(self):
         return self._connection_url
 
+    @staticmethod
+    def from_response(response):
+        return Datasource(response["name"], response["createdAt"],
+                          response["datasourceUrn"], response["description"])
 
-class Dataset:
+
+class Dataset(object):
     def __init__(self, name, created_at, urn, datasource_urn, description):
         self._name = name
         self._created_at = created_at
@@ -166,3 +186,8 @@ class Dataset:
     @property
     def description(self):
         return self._description
+
+    @staticmethod
+    def from_response(response):
+        return Dataset(response["name"], response["createdAt"], response["urn"],
+                       response["datasourceUrn"], response["description"])
