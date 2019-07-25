@@ -134,7 +134,7 @@ class MarquezClient(object):
         if not namespace_name:
             namespace_name = self._namespace_name
 
-        return self._get(
+        responses = self._get(
             self._url('/namespaces/{0}/jobs', namespace_name),
             params={
                 'limit': limit,

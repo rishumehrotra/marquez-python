@@ -23,7 +23,8 @@ class ModelGenerator:
 
     @staticmethod
     def new_location():
-        return "https://github.com/repo/test/commit/" + ModelGenerator._new_id()
+        return "https://github.com/repo/test/commit/" \
+               + ModelGenerator._new_id()
 
     @staticmethod
     def new_datasource_name():
@@ -31,13 +32,15 @@ class ModelGenerator:
 
     @staticmethod
     def new_datasource_urn():
-        return "urn:datasource:{}:{}".format(ModelGenerator._new_datasource_type(),
-                                             ModelGenerator._new_db_name()) + ModelGenerator._new_id()
+        return "urn:datasource:{}:{}".format(
+            ModelGenerator._new_datasource_type(),
+            ModelGenerator._new_db_name()) + ModelGenerator._new_id()
 
     @staticmethod
     def new_connection_url():
-        return "jdbc:{}://localhost:5431/{}".format(ModelGenerator._new_datasource_type(),
-                                                    ModelGenerator._new_db_name()) + ModelGenerator._new_id()
+        return "jdbc:{}://localhost:5431/{}".format(
+            ModelGenerator._new_datasource_type(),
+            ModelGenerator._new_db_name()) + ModelGenerator._new_id()
 
     @staticmethod
     def new_dataset_name():
@@ -49,7 +52,8 @@ class ModelGenerator:
 
     @staticmethod
     def new_dataset_urn():
-        return "urn:dataset:{}:public.room_bookings".format(ModelGenerator._new_db_name()) + ModelGenerator._new_id()
+        return "urn:dataset:{}:public.room_bookings".format(
+            ModelGenerator._new_db_name()) + ModelGenerator._new_id()
 
     @staticmethod
     def new_description():
@@ -85,53 +89,73 @@ class ModelGenerator:
 
     @staticmethod
     def new_namespace():
-        return Namespace(ModelGenerator.new_namespace_name(), ModelGenerator.new_time_stamp(),
-                         ModelGenerator.new_owner_name(), ModelGenerator.new_description())
+        return Namespace(ModelGenerator.new_namespace_name(),
+                         ModelGenerator.new_time_stamp(),
+                         ModelGenerator.new_owner_name(),
+                         ModelGenerator.new_description())
 
     @staticmethod
     def new_job():
         time_stamp = ModelGenerator.new_time_stamp()
-        return Job(ModelGenerator.new_job_name(), time_stamp, time_stamp, ModelGenerator.new_dataset_urns(3),
-                   ModelGenerator.new_dataset_urns(4), ModelGenerator.new_location(), ModelGenerator.new_description())
+        return Job(ModelGenerator.new_job_name(), time_stamp, time_stamp,
+                   ModelGenerator.new_dataset_urns(3),
+                   ModelGenerator.new_dataset_urns(4),
+                   ModelGenerator.new_location(),
+                   ModelGenerator.new_description())
 
     @staticmethod
     def new_jobrun():
-        return JobRun(ModelGenerator.new_run_id(), ModelGenerator.new_time_stamp(), ModelGenerator.new_time_stamp(),
-                      ModelGenerator.new_run_args(), ModelGenerator.new_run_state())
+        return JobRun(ModelGenerator.new_run_id(),
+                      ModelGenerator.new_time_stamp(),
+                      ModelGenerator.new_time_stamp(),
+                      ModelGenerator.new_run_args(),
+                      ModelGenerator.new_run_state())
 
     @staticmethod
     def new_datasource():
-        return Datasource(ModelGenerator.new_datasource_name(), ModelGenerator.new_time_stamp(),
-                          ModelGenerator.new_datasource_urn(), ModelGenerator.new_connection_url())
+        return Datasource(ModelGenerator.new_datasource_name(),
+                          ModelGenerator.new_time_stamp(),
+                          ModelGenerator.new_datasource_urn(),
+                          ModelGenerator.new_connection_url())
 
     @staticmethod
     def new_dataset():
-        return Dataset(ModelGenerator.new_dataset_name(), ModelGenerator.new_time_stamp(),
-                       ModelGenerator.new_dataset_urn(), ModelGenerator.new_datasource_urn(),
+        return Dataset(ModelGenerator.new_dataset_name(),
+                       ModelGenerator.new_time_stamp(),
+                       ModelGenerator.new_dataset_urn(),
+                       ModelGenerator.new_datasource_urn(),
                        ModelGenerator.new_description())
 
     @staticmethod
     def namespace_as_json(namespace):
-        return {"name": namespace.name, "createdAt": namespace.created_at, "owner": namespace.owner_name,
+        return {"name": namespace.name, "createdAt": namespace.created_at,
+                "owner": namespace.owner_name,
                 "description": namespace.description}
 
     @staticmethod
     def job_as_json(job):
-        return {"name": job.name, "createdAt": job.created_at, "updatedAt": job.updated_at,
-                "inputDatasetUrns": job.input_dataset_urns, "outputDatasetUrns": job.output_dataset_urns,
+        return {"name": job.name, "createdAt": job.created_at,
+                "updatedAt": job.updated_at,
+                "inputDatasetUrns": job.input_dataset_urns,
+                "outputDatasetUrns": job.output_dataset_urns,
                 "location": job.location, "description": job.description}
 
     @staticmethod
     def jobrun_as_json(jobrun):
-        return {"runId": jobrun.run_id, "nominalStartTime": jobrun.nominal_start_time,
-                "nominalEndTime": jobrun.nominal_end_time, "runArgs": jobrun.run_args, "runState": jobrun.run_state}
+        return {"runId": jobrun.run_id,
+                "nominalStartTime": jobrun.nominal_start_time,
+                "nominalEndTime": jobrun.nominal_end_time,
+                "runArgs": jobrun.run_args, "runState": jobrun.run_state}
 
     @staticmethod
     def datasource_as_json(datasource):
-        return {"name": datasource.name, "createdAt": datasource.created_at, "urn": datasource.urn,
+        return {"name": datasource.name, "createdAt": datasource.created_at,
+                "urn": datasource.urn,
                 "connectionUrl": datasource.connection_url}
 
     @staticmethod
     def dataset_as_json(dataset):
-        return {"name": dataset.name, "createdAt": dataset.created_at, "urn": dataset.urn,
-                "datasourceUrn": dataset.datasource_urn, "description": dataset.description}
+        return {"name": dataset.name, "createdAt": dataset.created_at,
+                "urn": dataset.urn,
+                "datasourceUrn": dataset.datasource_urn,
+                "description": dataset.description}

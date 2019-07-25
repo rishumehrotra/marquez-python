@@ -91,8 +91,10 @@ class Job(object):
 
     @staticmethod
     def from_response(response):
-        return Job(response['name'], response['createdAt'], response['updatedAt'], response['inputDatasetUrns'],
-                   response['outputDatasetUrns'], response['location'], response['description'])
+        return Job(response['name'], response['createdAt'],
+                   response['updatedAt'], response['inputDatasetUrns'],
+                   response['outputDatasetUrns'], response['location'],
+                   response['description'])
 
 
 class JobRun(object):
@@ -127,7 +129,8 @@ class JobRun(object):
     @staticmethod
     def from_response(response):
         return JobRun(response["runId"], response["nominalStartTime"],
-                      response["nominalEndTime"], response["runArgs"], response["runState"])
+                      response["nominalEndTime"], response["runArgs"],
+                      response["runState"])
 
 
 class Datasource(object):
@@ -189,5 +192,6 @@ class Dataset(object):
 
     @staticmethod
     def from_response(response):
-        return Dataset(response["name"], response["createdAt"], response["urn"],
+        return Dataset(response["name"], response["createdAt"],
+                       response["urn"],
                        response["datasourceUrn"], response["description"])

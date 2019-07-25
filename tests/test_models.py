@@ -52,7 +52,8 @@ def test_initialize_job():
     location = ModelGenerator.new_location()
     description = ModelGenerator.new_description()
 
-    job = Job(name, created_at, updated_at, input_dataset_urns, output_dataset_urns, location, description)
+    job = Job(name, created_at, updated_at, input_dataset_urns,
+              output_dataset_urns, location, description)
 
     assert name == job.name
     assert created_at == job.created_at
@@ -85,7 +86,8 @@ def test_initialize_jobrun():
     run_args = ModelGenerator.new_run_args()
     run_state = ModelGenerator.new_run_state()
 
-    job_run = JobRun(run_id, nominal_start_time, nominal_end_time, run_args, run_state)
+    job_run = JobRun(run_id, nominal_start_time, nominal_end_time, run_args,
+                     run_state)
 
     assert run_id == job_run.run_id
     assert nominal_start_time == job_run.nominal_start_time
@@ -101,7 +103,8 @@ def test_jobrun_factory():
     jobrun_actual = JobRun.from_response(jobrun_json)
 
     assert jobrun_expected.run_id == jobrun_actual.run_id
-    assert jobrun_expected.nominal_start_time == jobrun_actual.nominal_start_time
+    assert jobrun_expected.nominal_start_time == \
+        jobrun_actual.nominal_start_time
     assert jobrun_expected.nominal_end_time == jobrun_actual.nominal_end_time
     assert jobrun_expected.run_args == jobrun_actual.run_args
     assert jobrun_expected.run_state == jobrun_actual.run_state
@@ -130,7 +133,8 @@ def test_datasource_factory():
     assert datasource_expected.name == datasource_actual.name
     assert datasource_expected.created_at == datasource_actual.created_at
     assert datasource_expected.urn == datasource_actual.urn
-    assert datasource_expected.connection_url == datasource_actual.connection_url
+    assert datasource_expected.connection_url == \
+        datasource_actual.connection_url
 
 
 def test_initialize_dataset():
