@@ -156,7 +156,7 @@ class Datasource(object):
     @staticmethod
     def from_response(response):
         return Datasource(response["name"], response["createdAt"],
-                          response["datasourceUrn"], response["description"])
+                          response["urn"], response["connectionUrl"])
 
 
 class Dataset(object):
