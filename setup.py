@@ -20,9 +20,10 @@
 
 
 from setuptools import find_packages, setup
+from marquez_client.version import VERSION
 
 NAME = "marquez-python"
-VERSION = "0.5.6"
+VERSION = VERSION
 # To install the library, run the following
 #
 # python setup.py install
