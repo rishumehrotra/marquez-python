@@ -39,6 +39,7 @@ def get_version(rel_path):
 
 
 NAME = "marquez-python"
+
 # To install the library, run the following
 #
 # python setup.py install
