@@ -21,7 +21,6 @@ import codecs
 import os
 
 from setuptools import find_packages, setup
-from marquez_client.version import VERSION
 
 
 def read(rel_path):
